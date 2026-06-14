@@ -83,3 +83,23 @@ htmlcov/
 *~
 .swp
 .swo
+
+# pnpm / Vite
+.pnpm-debug.log*
+.pnpm-store/
+.vite/
+*.tsbuildinfo
+
+# Local environment
+.env
+.env.local
+.env.*.local
+
+# Python virtual envs in backend
+backend/.venv/
+backend/venv/
+
+# Ignore build artifacts from tooling
+/.cache
+/.parcel-cache
+
