@@ -1,0 +1,127 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║              ⚠️  INSTALAÇÃO DO AMBIENTE (NECESSÁRIO)                       ║
+║                                                                            ║
+║         Você precisa instalar Python, Node.js e Git antes de rodar         ║
+║                          o projeto!                                        ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+STATUS ATUAL:
+  ❌ Python: NÃO INSTALADO
+  ❌ Node.js: NÃO INSTALADO
+  ❌ npm: NÃO INSTALADO
+  ❌ Git: NÃO INSTALADO (talvez)
+  ❌ Docker: Desconhecido
+
+================================================================================
+  INSTALAÇÃO RÁPIDA (WINDOWS)
+================================================================================
+
+OPÇÃO 1: Usar instaladores diretos (Recomendado)
+────────────────────────────────────────────────
+
+1️⃣  INSTALAR PYTHON:
+    → Acesse: https://www.python.org/downloads/
+    → Clique em "Download Python 3.11.x" (versão mais recente)
+    → Execute o instalador .exe
+    → MARQUE: "Add Python 3.11 to PATH"
+    → Clique em "Install Now"
+    → Aguarde terminar (~2 min)
+
+2️⃣  INSTALAR NODE.JS (VIRA COM NPM):
+    → Acesse: https://nodejs.org/
+    → Clique em "LTS" (versão mais estável)
+    → Execute o instalador .msi
+    → Clique em "Next" para tudo
+    → Clique em "Install"
+    → Aguarde terminar (~2 min)
+
+3️⃣  INSTALAR GIT:
+    → Acesse: https://git-scm.com/download/win
+    → Execute o instalador .exe
+    → Clique em "Next" para tudo (configurações padrão)
+    → Clique em "Finish"
+    → Aguarde terminar (~1 min)
+
+4️⃣  INSTALAR DOCKER (Opcional mas recomendado):
+    → Acesse: https://www.docker.com/products/docker-desktop
+    → Faça download do instalador
+    → Execute
+    → Reinicie o computador quando solicitado
+    → Aguarde terminar (~5 min)
+
+════════════════════════════════════════════════════════════════════════════
+
+OPÇÃO 2: Usar Chocolatey (Avançado, mas mais rápido)
+────────────────────────────────────────────────────
+
+Se você já tem Chocolatey instalado:
+
+  choco install python nodejs git docker-desktop
+
+================================================================================
+  VERIFICAR INSTALAÇÃO
+================================================================================
+
+Após instalar TUDO, feche o PowerShell atual e abra um NOVO.
+
+Digite estes comandos um por um:
+
+1. python --version
+   Deve mostrar: Python 3.11.x
+
+2. node --version
+   Deve mostrar: v18.x.x ou v20.x.x
+
+3. npm --version
+   Deve mostrar: 9.x.x ou 10.x.x
+
+4. git --version
+   Deve mostrar: git version 2.x.x
+
+5. docker --version
+   Deve mostrar: Docker version x.x.x
+
+Se todos mostrem versões = SUCESSO! ✅
+
+================================================================================
+  PRÓXIMO PASSO
+================================================================================
+
+Depois de instalar TUDO:
+
+1. Feche o PowerShell atual
+2. Abra um NOVO PowerShell
+3. Volte para a pasta do projeto:
+
+   cd "c:\Users\User\Downloads\Moderntaskmanagerinterface-main\Moderntaskmanagerinterface-main"
+
+4. Execute o arquivo:
+
+   .\RODAR_PROJETO.bat
+
+   OU rode os comandos manualmente (veja SETUP.txt - Parte 3, 4, 5, 6, 7)
+
+================================================================================
+  ⏱️  TEMPO ESTIMADO
+================================================================================
+
+Python:      2 minutos
+Node.js:     2 minutos
+Git:         1 minuto
+Docker:      5 minutos (opcional)
+─────────────────────────────
+TOTAL:       ~10 minutos de instalação
+             +30 minutos rodando o projeto
+
+================================================================================
+  DÚVIDAS?
+================================================================================
+
+Se tiver problema com instalação, consulte:
+  - SETUP.txt (Parte 1 e 2)
+  - INSTALAR_GIT.txt
+  - Google: "Como instalar [software] no Windows"
+
+================================================================================

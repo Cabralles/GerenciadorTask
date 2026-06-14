@@ -1,0 +1,99 @@
+================================================================================
+  ⚠️  GIT NÃO ESTÁ INSTALADO
+================================================================================
+
+Para fazer push do projeto para GitHub, você precisa instalar Git.
+
+================================================================================
+  INSTALAÇÃO DO GIT (WINDOWS)
+================================================================================
+
+OPÇÃO 1: Git for Windows (recomendado)
+  1. Acesse: https://git-scm.com/download/win
+  2. Faça download: Git-2.x.x-64-bit.exe
+  3. Execute o instalador (.exe)
+  4. Clique em "Next" para tudo (configurações padrão funcionam bem)
+  5. Na opção "Choose the default editor", selecione "Use Visual Studio Code"
+  6. Na opção "Configure line ending conversions", selecione "Checkout as-is, commit Unix-style line endings"
+  7. Clique em "Finish"
+
+OPÇÃO 2: Using Windows Package Manager
+  winget install Git.Git
+
+OPÇÃO 3: Using Chocolatey
+  choco install git
+
+================================================================================
+  INSTALAÇÃO DO GIT (MAC)
+================================================================================
+
+OPÇÃO 1: Homebrew (recomendado)
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  brew install git
+
+OPÇÃO 2: Xcode Command Line Tools
+  xcode-select --install
+
+OPÇÃO 3: Git Installer
+  https://git-scm.com/download/mac
+
+================================================================================
+  INSTALAÇÃO DO GIT (LINUX)
+================================================================================
+
+Ubuntu/Debian:
+  sudo apt-get update
+  sudo apt-get install git
+
+Fedora/RHEL:
+  sudo dnf install git
+
+Arch:
+  sudo pacman -S git
+
+================================================================================
+  VERIFICAR SE GIT ESTÁ INSTALADO
+================================================================================
+
+Abra o terminal (PowerShell no Windows) e digite:
+  git --version
+
+Se retornar a versão (ex: git version 2.40.0), está tudo certo!
+
+================================================================================
+  APÓS INSTALAR GIT
+================================================================================
+
+1. Feche o terminal/PowerShell atual
+2. Abra um novo terminal
+3. Volte para a pasta do projeto:
+   cd "c:\Users\User\Downloads\Moderntaskmanagerinterface-main\Moderntaskmanagerinterface-main"
+
+4. Execute os comandos de setup:
+   
+   git config --global user.name "Seu Nome"
+   git config --global user.email "seu-email@example.com"
+   
+   git init
+   git add .
+   git commit -m "Initial commit: Task Manager - React 19 + FastAPI + PostgreSQL"
+
+5. Fazer push para GitHub:
+   
+   git remote add origin https://github.com/seu-usuario/task-manager.git
+   git branch -M main
+   git push -u origin main
+
+================================================================================
+  PRÓXIMOS PASSOS
+================================================================================
+
+Depois que Git estiver instalado:
+
+1. Consulte: GITHUB_PUSH.txt (instruções completas)
+2. Configure Git com seu nome e email
+3. Faça o primeiro commit
+4. Conecte ao repositório GitHub
+5. Faça push
+
+================================================================================

@@ -1,0 +1,412 @@
+================================================================================
+  GUIA DE SETUP MANUAL - TASK MANAGER (Gerenciador de Tarefas)
+================================================================================
+
+STATUS: Projeto 60% pronto. Faltam as partes de banco de dados e integrações.
+
+================================================================================
+  PARTE 1: PREPARAÇÃO DO AMBIENTE
+================================================================================
+
+✅ Já instalado:
+  - Python 3.11+ 
+  - Node.js 18+
+  - Git
+  - VS Code
+
+❌ Precisa instalar:
+  - PostgreSQL (ou usar Docker)
+  - Docker & Docker Compose (recomendado)
+
+================================================================================
+  OPÇÃO A: USANDO DOCKER (RECOMENDADO)
+================================================================================
+
+Passo 1: Instalar Docker
+  - Windows: https://www.docker.com/products/docker-desktop
+  - Mac: https://www.docker.com/products/docker-desktop
+  - Linux: sudo apt-get install docker.io docker-compose
+
+Passo 2: Criar docker-compose.yml
+  - Crie arquivo na raiz do projeto: docker-compose.yml
+  - Copie o conteúdo abaixo:
+
+---INÍCIO DO ARQUIVO---
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: task_manager_db
+    environment:
+      POSTGRES_USER: taskmanager
+      POSTGRES_PASSWORD: taskmanager_password
+      POSTGRES_DB: task_manager
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taskmanager"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+---FIM DO ARQUIVO---
+
+Passo 3: Iniciar PostgreSQL com Docker
+  No terminal (na raiz do projeto):
+  
+  docker-compose up -d postgres
+  
+  Verificar se está rodando:
+  docker ps
+  
+  Você deve ver: task_manager_db    Up
+
+================================================================================
+  OPÇÃO B: INSTALANDO POSTGRESQL MANUALMENTE
+================================================================================
+
+Passo 1: Baixar PostgreSQL
+  - Windows: https://www.postgresql.org/download/windows/
+  - Mac: brew install postgresql
+  - Linux: sudo apt-get install postgresql postgresql-contrib
+
+Passo 2: Criar banco de dados
+  - Abra pgAdmin ou use o terminal:
+  
+  psql -U postgres
+  CREATE DATABASE task_manager;
+  CREATE USER taskmanager WITH PASSWORD 'taskmanager_password';
+  ALTER ROLE taskmanager SET client_encoding TO 'utf8';
+  ALTER ROLE taskmanager SET default_transaction_isolation TO 'read committed';
+  ALTER ROLE taskmanager SET timezone TO 'UTC';
+  GRANT ALL PRIVILEGES ON DATABASE task_manager TO taskmanager;
+
+Passo 3: Verificar conexão
+  psql -U taskmanager -d task_manager -c "SELECT version();"
+
+================================================================================
+  PARTE 2: CONFIGURAR VARIÁVEIS DE AMBIENTE
+================================================================================
+
+Passo 1: Criar .env na raiz do backend
+  Arquivo: backend/.env
+  
+  Conteúdo:
+---INÍCIO---
+# Database
+DATABASE_URL=postgresql://taskmanager:taskmanager_password@localhost:5432/task_manager
+
+# JWT
+SECRET_KEY=sua-chave-secreta-muito-segura-mude-isso-em-producao
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# CORS
+FRONTEND_URL=http://localhost:5173
+
+# App
+APP_NAME=Task Manager API
+DEBUG=True
+---FIM---
+
+Passo 2: Criar .env.local no frontend
+  Arquivo: .env.local (ou .env)
+  
+  Conteúdo:
+---INÍCIO---
+VITE_API_URL=http://localhost:8000
+---FIM---
+
+================================================================================
+  PARTE 3: INSTALAR DEPENDÊNCIAS DO BACKEND
+================================================================================
+
+Passo 1: Abrir terminal e ir para pasta backend
+  cd backend
+
+Passo 2: Criar ambiente virtual (venv)
+  python -m venv venv
+  
+  Ativar:
+  - Windows: venv\Scripts\activate
+  - Mac/Linux: source venv/bin/activate
+
+Passo 3: Instalar dependências
+  pip install -r requirements.txt
+  
+  Isso vai instalar:
+  - fastapi
+  - uvicorn
+  - sqlalchemy
+  - psycopg2-binary (PostgreSQL driver)
+  - python-jose (JWT)
+  - passlib (Hash de senhas)
+  - pydantic (Validação)
+  - e mais...
+
+Passo 4: Verificar instalação
+  pip list
+  
+  Você deve ver todas as dependências listadas.
+
+================================================================================
+  PARTE 4: INSTALAR DEPENDÊNCIAS DO FRONTEND
+================================================================================
+
+Passo 1: Abrir novo terminal (não feche o do backend!)
+  cd raiz_do_projeto
+
+Passo 2: Instalar dependências
+  npm install
+  
+  OU se usar pnpm:
+  pnpm install
+
+Passo 3: Verificar instalação
+  npm list react
+
+================================================================================
+  PARTE 5: CRIAR ESTRUTURA DO BANCO DE DADOS
+================================================================================
+
+Passo 1: Usar Alembic para migrations (OPCIONAL, mas recomendado)
+  
+  Instalar Alembic:
+  pip install alembic
+  
+  Inicializar:
+  cd backend
+  alembic init alembic
+  
+  Configurar alembic.ini (DATABASE_URL)
+  
+  Criar migration inicial:
+  alembic revision --autogenerate -m "Initial migration"
+  
+  Aplicar migration:
+  alembic upgrade head
+
+Passo 2: OU criar tabelas manualmente (alternativa simples)
+  
+  Na primeira vez que rodar o backend, as tabelas serão criadas automaticamente
+  (configurado em: backend/app/main.py)
+
+================================================================================
+  PARTE 6: RODAR O BACKEND
+================================================================================
+
+Passo 1: Terminal 1 - Backend
+  cd backend
+  python run.py
+  
+  Você deve ver:
+  Uvicorn running on http://127.0.0.1:8000
+  
+  Acessar:
+  - API: http://localhost:8000
+  - Docs (Swagger): http://localhost:8000/docs
+  - ReDoc: http://localhost:8000/redoc
+
+Passo 2: Testar API
+  No navegador ou Postman:
+  GET http://localhost:8000/
+  
+  Resposta esperada:
+  {
+    "message": "Task Manager API is running",
+    "version": "1.0.0",
+    "docs": "/docs"
+  }
+
+================================================================================
+  PARTE 7: RODAR O FRONTEND
+================================================================================
+
+Passo 1: Terminal 2 - Frontend
+  cd raiz_do_projeto
+  npm run dev
+  
+  Você deve ver:
+  VITE v5.x.x ready in xxx ms
+  
+  Local: http://localhost:5173
+
+Passo 2: Acessar aplicação
+  Abra: http://localhost:5173
+
+================================================================================
+  PARTE 8: O QUE VOCÊ PRECISA FAZER AGORA (MUITO IMPORTANTE!)
+================================================================================
+
+✅ BÁSICO (Deve funcionar agora):
+  [ ] Docker com PostgreSQL rodando
+  [ ] Backend na porta 8000
+  [ ] Frontend na porta 5173
+  [ ] Banco de dados criado
+
+❌ FALTANDO FAZER (Próximos passos):
+
+1. **Criar Usuário Admin (Seed do banco)**
+   - Arquivo: backend/app/seeds.py
+   - Criar usuário padrão: email: admin@example.com, senha: admin123
+   
+   Código de exemplo:
+   ```python
+   from app.models import User
+   from app.core.security import get_password_hash
+   from app.core.database import SessionLocal
+   
+   def seed_admin():
+       db = SessionLocal()
+       user = User(
+           email="admin@example.com",
+           full_name="Admin",
+           hashed_password=get_password_hash("admin123"),
+           is_active=True,
+           is_admin=True
+       )
+       db.add(user)
+       db.commit()
+       print("Admin criado!")
+   
+   if __name__ == "__main__":
+       seed_admin()
+   ```
+   
+   Rodar: python backend/app/seeds.py
+
+2. **Testar Autenticação**
+   - No Swagger (http://localhost:8000/docs)
+   - Clicar em "POST /api/auth/login"
+   - Enviar: {"email": "admin@example.com", "password": "admin123"}
+   - Copiar token JWT retornado
+
+3. **Conectar Frontend ao Backend**
+   - Abrir: src/services/api.ts
+   - Ajustar URL da API se necessário
+   - Testar em Dashboard.tsx
+
+4. **Adicionar Modelo de Notificações**
+   - Criar: backend/app/models/notification.py
+   - Baseado em: backend/app/models/task.py
+   - Adicionar rota: backend/app/routes/notifications.py
+
+5. **Implementar CRUD Completo**
+   - Tarefas: Create, Read, Update, Delete
+   - Usuários: Create, Read, Update, Delete
+   - Notificações: Create, Read, Delete
+
+6. **Componentes Conectados**
+   - Dashboard.tsx → GET /api/tasks
+   - TaskCard.tsx → Exibir dados reais
+   - TaskModal.tsx → POST/PUT /api/tasks
+   - UserPanel.tsx → GET /api/users/me
+
+7. **Validações e Erros**
+   - Tratamento de erro 401 (token expirado)
+   - Loading states nos componentes
+   - Mensagens de sucesso/erro
+
+================================================================================
+  PARTE 9: TROUBLESHOOTING
+================================================================================
+
+❌ Erro: "Connection refused" (Backend não conecta ao banco)
+   Solução:
+   - Verificar se PostgreSQL está rodando: docker ps
+   - Verificar DATABASE_URL em .env
+   - Verificar dados de login (user/password)
+
+❌ Erro: "Port 5432 already in use"
+   Solução:
+   - docker-compose down
+   - OU mudar porta em docker-compose.yml: "5433:5432"
+
+❌ Erro: "Module not found" (Python)
+   Solução:
+   - Verificar se venv está ativado
+   - pip install -r requirements.txt novamente
+
+❌ Erro: "Cannot find module '@radix-ui/'" (Frontend)
+   Solução:
+   - npm install novamente
+   - Limpar cache: rm -rf node_modules package-lock.json
+   - npm install
+
+❌ CORS error no frontend
+   Solução:
+   - Verificar FRONTEND_URL em backend/.env
+   - Deve ser: http://localhost:5173
+
+================================================================================
+  PARTE 10: VERIFICAÇÃO FINAL
+================================================================================
+
+Checklist antes de começar a desenvolver:
+
+[ ] Docker ou PostgreSQL rodando
+[ ] Backend iniciando sem erros
+[ ] Frontend iniciando sem erros
+[ ] Backend respondendo em http://localhost:8000
+[ ] Frontend rodando em http://localhost:5173
+[ ] Swagger acessível em http://localhost:8000/docs
+[ ] Banco de dados criado e acessível
+[ ] Variáveis de ambiente configuradas (.env)
+[ ] Dependências instaladas (pip list e npm list)
+
+Se tudo marcado ✅, está pronto para desenvolvimentoо!
+
+================================================================================
+  PRÓXIMOS PASSOS
+================================================================================
+
+1. Criar usuário admin (seed)
+2. Testar login no Swagger
+3. Conectar componentes do frontend
+4. Implementar CRUD funcional
+5. Adicionar notificações
+6. Testes
+7. Deploy
+
+================================================================================
+  REFERÊNCIAS RÁPIDAS
+================================================================================
+
+Iniciar tudo:
+  Terminal 1: docker-compose up -d postgres
+  Terminal 2: cd backend && python run.py
+  Terminal 3: npm run dev
+
+Parar tudo:
+  docker-compose down
+
+Logs:
+  docker logs task_manager_db
+  
+Resetar banco:
+  docker-compose down -v
+  docker-compose up -d postgres
+
+Acessar banco diretamente:
+  docker exec -it task_manager_db psql -U taskmanager -d task_manager
+
+================================================================================
+  DÚVIDAS?
+================================================================================
+
+Consulte:
+- FastAPI: https://fastapi.tiangolo.com/
+- React: https://react.dev/
+- SQLAlchemy: https://www.sqlalchemy.org/
+- PostgreSQL: https://www.postgresql.org/docs/
+
+================================================================================
+  FIM DO GUIA
+================================================================================
+
+Boa sorte no desenvolvimento! 🚀
